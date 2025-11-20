@@ -15,9 +15,9 @@ $chromeOptions = new ChromeOptions();
 $capabilities = DesiredCapabilities::chrome();
 $capabilities->setCapability(ChromeOptions::CAPABILITY, $chromeOptions);
 
+$driver = RemoteWebDriver::create('http://10.10.42.225:4444/wd/hub', $capabilities);
+$driver->manage()->window()->setSize(new WebDriverDimension(1024, 768));
 
-$options = new ChromeOptions();
-$driver = ChromeDriver::start($options);
 // --------------------------
 // Helper function: Screenshot
 // --------------------------
