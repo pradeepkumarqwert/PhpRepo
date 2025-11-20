@@ -17,6 +17,7 @@ $capabilities->setCapability(ChromeOptions::CAPABILITY, $chromeOptions);
 // CORRECT SERVER URL
 $serverUrl = 'http://localhost:53289';
 
+//New changes
 $driver = RemoteWebDriver::create(
     $serverUrl,
     $capabilities,
