@@ -1,0 +1,149 @@
+✅ Ruby Selenium – Complete Installation Guide (Windows)
+1. Download RubyInstaller
+
+Open the website: https://rubyinstaller.org/
+
+Click the Download button.
+
+Under “RubyInstaller with DevKit”, download:
+
+Ruby+Devkit 3.4.7-1 (x64)
+
+After the file downloads, open the .exe.
+
+Complete the installation process.
+
+At the end of installation, a command window appears with options:
+
+1 - MSYS2 base installation
+2 - MSYS2 system update (optional)
+3 - MSYS2 and MINGW development toolchain
+Which components shall be installed? If unsure press ENTER [1,3]
+
+
+Type:
+
+1 2 3
+
+
+Then press Enter.
+Once finished, press Enter again to close the installer.
+
+2. Configure PowerShell Execution Policy
+
+Open PowerShell as Administrator.
+
+Run this command:
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+
+✔ This is required because Windows blocks unsigned scripts such as
+ridk.ps1 (part of RubyInstaller).
+
+Enable MSYS2 + MINGW toolchain:
+
+ridk enable
+
+3. Verify Installations
+
+Run the following commands to verify everything is installed properly:
+
+gcc --version
+make --version
+pacman --version
+ruby -v
+ridk version
+
+4. Install Selenium & WebDrivers
+
+Install Selenium WebDriver for Ruby:
+
+gem install selenium-webdriver
+
+
+Install the WebDrivers gem:
+
+gem install webdrivers
+
+
+Verify both gems:
+
+gem list selenium-webdriver
+gem list webdrivers
+
+5. Create a Ruby Selenium Project
+
+Create a folder anywhere on your system and name it:
+
+RubySeleniumProject
+
+
+Open this folder in VS Code.
+
+6. Add Ruby to System PATH
+
+Add Ruby to PATH:
+
+Open Environment Variables
+
+Under User variables, select Path → Edit
+
+Add your Ruby installation path, e.g.:
+
+C:\Ruby34-x64\bin
+
+
+Click OK → OK → OK
+
+7. Install Required VS Code Extensions
+
+In VS Code:
+
+Press: Ctrl + Shift + X
+
+Install these extensions:
+
+✔ Ruby (by Peng Lv)
+
+Provides Ruby syntax support.
+
+✔ Ruby Solargraph (optional, recommended)
+
+Enables autocomplete and IntelliSense.
+
+✔ Code Runner (optional)
+
+Allows running Ruby scripts easily.
+
+8. Initialize Bundler & Gemfile
+
+Open VS Code Terminal:
+
+Press: Ctrl + `
+
+Initialize a Gemfile:
+
+bundle init
+
+
+Open Gemfile and add:
+
+source "https://rubygems.org"
+
+gem "selenium-webdriver"
+gem "webdrivers"
+gem "rspec"
+
+
+Install the gems:
+
+bundle install
+
+9. Create Your Selenium Test File
+
+Create a .rb file inside your project (example: test_script.rb).
+
+Click Run in VS Code or run via terminal:
+
+ruby test_script.rb
