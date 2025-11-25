@@ -1,0 +1,167 @@
+1️⃣ Initial Issue
+
+You ran this script:
+
+$driver = RemoteWebDriver::create('http://localhost:5555', $capabilities, 60000, 60000);
+
+
+Error:
+
+Curl error thrown for http POST to /session
+Failed to connect to localhost port 5555
+Operation timed out
+
+
+Cause:
+
+The Selenium Grid server was not running on the port you specified (5555).
+
+PHP WebDriver couldn’t reach the hub.
+
+Solution:
+
+Make sure Selenium Hub is running (java -jar selenium-server-standalone.jar hub)
+
+Use the correct hub URL with /wd/hub if needed.
+
+Example:
+
+$serverUrl = 'http://localhost:4444/wd/hub';
+
+2️⃣ Passing Capabilities Incorrectly
+
+You tried setting Java-style capabilities in PHP:
+
+FirefoxOptions browserOptions = new FirefoxOptions();
+browserOptions.setPlatformName("Windows 11");
+browserOptions.setBrowserVersion("137");
+
+
+Error in PHP:
+
+Call to undefined method setPlatformName()
+
+
+Cause:
+
+PHP WebDriver’s FirefoxOptions and ChromeOptions don’t have setPlatformName or setBrowserVersion methods.
+
+You were using Java syntax directly in PHP.
+
+Solution:
+
+Use a flat array for W3C capabilities in PHP:
+
+$capabilities = [
+    'browserName' => 'chrome',
+    'browserVersion' => '142',  // exact version if required
+    'platformName' => 'Windows',
+    'goog:chromeOptions' => $chromeOptions
+];
+
+3️⃣ Random Chrome Version on Cloud Hub
+
+You noticed that your script randomly opened different Chrome versions.
+
+Cause:
+
+Without specifying browserVersion, Selenium Grid picks any available node.
+
+Solution:
+
+Add browserVersion and platformName in capabilities:
+
+$capabilities = [
+    'browserName' => 'chrome',
+    'browserVersion' => '142',
+    'platformName' => 'Windows',
+    'goog:chromeOptions' => $chromeOptions
+];
+
+4️⃣ Composer / PHP WebDriver Issues
+
+You tried:
+
+composer require php-webdriver/webdriver "^1.14"
+
+
+Error:
+
+ext-zip is missing
+
+
+Solution:
+
+Enable the PHP zip extension in php.ini:
+
+;extension=zip
+
+
+Remove ; → extension=zip
+
+Restart terminal / PHP CLI.
+
+Install PHP WebDriver successfully:
+
+composer require php-webdriver/webdriver "^1.14"
+
+
+Check version installed:
+
+composer show php-webdriver/webdriver
+
+5️⃣ Final Working PHP Script (Chrome, Grid)
+<?php
+require __DIR__ . '/../vendor/autoload.php';
+
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Chrome\ChromeOptions;
+use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverKeys;
+use Facebook\WebDriver\WebDriverDimension;
+
+// Selenium Hub URL
+$hubUrl = 'http://103.182.210.84:4444/wd/hub'; // add /wd/hub for W3C
+
+// Chrome options
+$chromeOptions = new ChromeOptions();
+$chromeOptions->addArguments(['--start-maximized']);
+
+// W3C capabilities
+$capabilities = [
+    'browserName' => 'chrome',
+    'browserVersion' => '142',      // specify exact Chrome version
+    'platformName' => 'Windows',    // specify platform
+    'goog:chromeOptions' => $chromeOptions
+];
+
+// Create RemoteWebDriver
+$driver = RemoteWebDriver::create($hubUrl, $capabilities, 60000, 60000);
+
+// Optional: Set browser window size
+$driver->manage()->window()->setSize(new WebDriverDimension(1024, 768));
+
+// Example test: Google search
+$driver->get("https://www.google.com");
+$driver->findElement(WebDriverBy::name("q"))
+       ->sendKeys("Selenium Grid PHP Chrome")
+       ->sendKeys(WebDriverKeys::ENTER);
+
+echo "Chrome test executed successfully" . PHP_EOL;
+
+// Quit browser
+sleep(5);
+$driver->quit();
+
+
+✅ This script:
+
+Connects to your Selenium Grid hub.
+
+Opens Chrome of the exact version specified.
+
+Maximizes the window.
+
+Performs a Google search.
+
+Exits cleanly.
